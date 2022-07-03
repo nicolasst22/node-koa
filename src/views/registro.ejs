@@ -25,35 +25,8 @@
                     class="form-control col-6"
                     type="text"
                     name="nombre"
-                    value="1@23.com"
                     required
                   />
-                </div>
-                <div class="form-group row">
-                  <label class="col-1" for="nombre">Edad</label>
-                  <input
-                    placeholder="Ingresar su edad"
-                    class="form-control col-6"
-                    type="number"
-                    name="edad"
-                    value="23"
-                    required
-                  />
-                </div>
-                <div class="form-group row">
-                  <label class="col-1" for="nombre">Dirección</label>
-                  <input
-                    placeholder="Ingresar su dirección"
-                    class="form-control col-6"
-                    type="text"
-                    name="direccion"
-                    value="1@23.com"
-                    required
-                  />
-                </div>
-                <div class="form-group row">
-                  <label class="col-1" for="nombre">Teléfono</label>
-                  <input id="phone"  class="form-control col-lg-*" type="tel" name="telefono" />
                 </div>
                 <div class="form-group row">
                   <label class="col-1" for="nombre">Email</label>
@@ -62,7 +35,6 @@
                     class="form-control col-6"
                     type="email"
                     name="username"
-                    value="1@23.com"
                     required
                   />
                   <%if (false) { %>
@@ -77,23 +49,9 @@
                     class="form-control col-6"
                     type="password"
                     name="password"
-                    value="1@23.com"
                     required
                   />
                 </div>
-
-                <div class="form-group row">
-                  <label class="col-1" for="nombre">Avatar</label>
-                  <input
-                    ty
-                    placeholder="subir avatar"
-                    class="form-control col-6"
-                    type="file"
-                    name="avatar"
-                    accept="image/png, image/gif, image/jpeg"
-                  />
-                </div>
-
                 <div class="form-group row" style="display: inline-block">
                   <input
                     class="btn btn-success"
@@ -112,15 +70,4 @@
       </div>
     </div>
   </body>
-  <script>
-    const phoneInputField = document.querySelector("#phone");
-    const phoneInput = window.intlTelInput(phoneInputField, {
-      utilsScript:
-        "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
-    });
-    function process(event) {
-      const phoneNumber = phoneInput.getNumber();
-        event.target[3].value = phoneNumber;
-      }
-  </script>
 </html>

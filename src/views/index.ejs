@@ -13,16 +13,7 @@
               <div class="alert alert-dark" role="alert">
                 Bienvenido <%= username %>
                 <span style="float: right">
-                  <a href="/logout">Desloguear</a></span
-                >
-                <span style="float: right">
-                  <a href="/carrito"
-                    ><i class="fa-solid fa-cart-shopping fa-2x"></i>
-                    <%if (items>0) { %>
-                    <span class="cart-items"><%= items %></span>
-                    <% }; %>
-                  </a></span
-                >
+                  <a href="/logout">Desloguear</a></span>
               </div>
             </div>
           </div>
@@ -36,7 +27,6 @@
                   <th scope="col">Nombre</th>
                   <th scope="col">Precio</th>
                   <th scope="col">Foto</th>
-                  <th scope="col">Agregar</th>
                 </thead>
                 <tbody></tbody>
               </table>
@@ -62,9 +52,7 @@
               "<td><img src=" +
               prod.foto +
               ' style="width: 64px" </td>' +
-              '<td><a href="/carrito/add/' +
-              (prod.id || prod._id) +
-              '"><i class="fa-solid fa-plus"></i></a></td></tr>';
+              '</tr>';
 
             $("#tblProductos tbody").append(newRowContent);
           });

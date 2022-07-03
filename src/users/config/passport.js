@@ -19,6 +19,7 @@ passport.use("login", new LocalPassport({ passReqToCallback: true }, (req, usern
         }
         if (!bcrypt.compareSync(password, usuario.password)) {
             logger.info("no pass");
+            req.session.messages = ['Usuario o contraseña incorrectos']
             return done(null, false, { message: 'Usuario o contraseña incorrectos' });
         }
         req.session.username = usuario.nombre;
@@ -27,23 +28,22 @@ passport.use("login", new LocalPassport({ passReqToCallback: true }, (req, usern
     });
 }));
 
-passport.use("register", new LocalPassport({ }, async (username, password, done) => {
-    console.log("error", username);
-    // const { nombre, apellido } = req.body;
-    // try {
-    //     await usuarioServices.registrar(nombre, apellido, username, password, (err, usuario) => {
-    //         if (err) {
-    //             // req.session.messages = [err]
-    //             done(err)
-    //         } else {
-    //             req.session.username = nombre;
-    //             eq.session.email = username;
-    //             done(null, usuario);
-    //         }
-    //     })
-    // } catch (e) {
-    //     console.log("error", e);
-    // }
+passport.use("register", new LocalPassport({ passReqToCallback: true }, async (req, username, password, done) => {
+    const { nombre, apellido } = req.body;
+    try {
+        await usuarioServices.registrar(nombre, apellido, username, password, (err, usuario) => {
+            if (err) {
+                req.session.messages = [err]
+                done(null, false);
+            } else {
+                req.session.username = nombre;
+                req.session.email = username;
+                done(null, usuario);
+            }
+        })
+    } catch (e) {
+        throw e;
+    }
 }));
 
 passport.use(new FacebookStrategy({

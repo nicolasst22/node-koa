@@ -6,86 +6,55 @@ const args = require("../config/yargs")
 const Router = require("koa-router");
 const { addPath } = require("graphql/jsutils/Path");
 const app = new Router();
-const usuarioServices = require("../users/services")
+
+app.get("/", (ctx) => {
+    const { req, res } = ctx;
+    if(ctx.isAuthenticated()){
+        return ctx.render("index", { username: ctx.session.username })
+    }else{
+        ctx.redirect("/login");
+    }
+})
+
+app.get("/login", (ctx) => {
+    const { res, req } = ctx;
+    if (ctx.isAuthenticated()) {
+        ctx.redirect('/');
+    } else {
+        const msg = ctx.session.messages ? ctx.session.messages[0] : undefined;
+        ctx.session.messages = null;
+        return ctx.render("login", { error: msg  })
+    }
+})
 
 
-//middleware que contra si esta logueado
-// const auth = async (ctx, next) => {
-//     const {req, res} = ctx;
-//     next();
-//     // if (req.isAuthenticated()) {
-//     //     next();
-//     // } else {
-//     //     res.redirect('/login');
-//     // }
-// }
-// app.get("/", auth, (ctx) => {
-//      const {req, res} = ctx;
-//     // if (req.session?.visitas) {
-//     //     req.session.visitas = 1;
-//     // } else {
-//     //     req.session.visitas++;
-//     // }
-//     // const { username } = req.session;
-//     res.render("index", { username })
-// })
+app.post("/login", passport.authenticate("login", {
+    successRedirect: "/",
+    failureRedirect: "login",
+    failureMessage: "Invalid username or password"
+}))
 
-// app.get("/login", (ctx) => {
-//     const { res, req } = ctx;
-//     if (ctx.isAuthenticated()) {
-//         ctx.redirect('/');
-//     } else {
-//         return ctx.render("login", { error: undefined })
-//     }
-// })
+app.get("/logout", (ctx) => {
+    const { username } = ctx.session;
+    ctx.logout();
+    ctx.session = null;
+    return ctx.render("logout", { username })
+})
 
+app.get("/registro", ctx => {
+    if (ctx.isAuthenticated()) {
+        ctx.redirect('/');
+    } else {
+          const msg = ctx.session.messages ? ctx.session.messages[0] : undefined;
+        ctx.session.messages = null;
+        return ctx.render("registro", { error: msg })
+    }
+})
 
-// app.post("/login", passport.authenticate("login", {
-//     successRedirect: "/",
-//     failureRedirect: "login",
-//     failureMessage: "Invalid username or password"
-// }))
-
-// app.get("/logout", auth, (req, res) => {
-//     const { username } = req.session;
-//     req.session.destroy(err => {
-//         if (err) {
-//             res.send("Ha ocurrido un error")
-//         } else {
-//             req.logout();
-//             res.render("logout", { username })
-//         }
-//     })
-// })
-
-// app.get("/registro", ctx => {
-//     if (ctx.isAuthenticated()) {
-//         ctx.redirect('/');
-//     } else {
-//         return ctx.render("registro", { error: ctx.session.messages ? ctx.session.messages[0] : undefined })
-//         //req.session.messages = []
-//     }
-// })
-
-// app.post("/registro", async function (ctx) {
-//     console.log("ctx", ctx.request.body)
-//     const {nombre, apellido, username, password} = ctx.request.body
-//     await usuarioServices.registrar(nombre, apellido, username, password, (err, usuario) => {
-//         if (err) {
-//             // req.session.messages = [err]
-//             ctx.redirect("/registro")
-//         } else {
-//             req.session.username = nombre;
-//             eq.session.email = username;
-//             done(null, usuario);
-//         }
-//     })
-// })
-
-// app.post("/registro", passport.authenticate("register", {
-//     successRedirect: "/",
-//     failureRedirect: "/registro"
-// }))
+app.post("/registro", passport.authenticate("register", {
+    successRedirect: "/",
+    failureRedirect: "/registro"
+}))
 
 // app.get('/auth/facebook', passport.authenticate('facebook', {
 //     scope: ['public_profile', 'email']
@@ -107,7 +76,7 @@ const usuarioServices = require("../users/services")
 //     logger.info(`${req.method}: ${req.path}`);
 //    // next();
 // })
-const numCPUs = require("os").cpus().length;
+// const numCPUs = require("os").cpus().length;
 // app.use(function () {
 //     yield this.render("index", {
 //       title: "Test Page",
@@ -119,22 +88,22 @@ const numCPUs = require("os").cpus().length;
 //     viewPath: __dirname + '/views'
 //   }));
 
-app.get("/info", (ctx) => {
-    // const { req, res } = ctx;
-    const info = {
-        args: JSON.stringify(args),
-        os: process.platform,
-        node: process.version,
-        memory: JSON.stringify(process.memoryUsage()),
-        cwd: process.cwd(),
-        pid: process.pid,
-        path: process.execPath,
-        cpus: numCPUs,
-        port: args.port
-    };
-    ctx.state = { info }
-    return ctx.render('info')
-})
+// app.get("/info", (ctx) => {
+//     // const { req, res } = ctx;
+//     const info = {
+//         args: JSON.stringify(args),
+//         os: process.platform,
+//         node: process.version,
+//         memory: JSON.stringify(process.memoryUsage()),
+//         cwd: process.cwd(),
+//         pid: process.pid,
+//         path: process.execPath,
+//         cpus: numCPUs,
+//         port: args.port
+//     };
+//     ctx.state = { info }
+//     return ctx.render('info', {info})
+// })
 
 app.use("/api", api.routes());
 
@@ -153,9 +122,5 @@ app.use(function (err, req, res, next) {
     res.status(err.status || 500);
     res.render('error');
 });
-
-
-
-
 
 module.exports = app;

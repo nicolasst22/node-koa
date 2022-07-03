@@ -23,7 +23,6 @@ class Mensajes {
     getAll = () => {
         return (async () => {
             const all = await this.dao.getAll();
-            console.log("all", all);
             return all.map(m => new MessageDTO(m));
             //return all;
         })();
