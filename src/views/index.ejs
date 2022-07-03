@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="es">
+  <%- include head %>
+  <body>
+    <div class="container-fluid">
+      <div id="chats">
+        <div class="container-fluid">
+          <div class="card">
+            <div class="card-header text-white bg-primary">
+              Inicio <span id="compress"></span>
+            </div>
+            <div class="card-body">
+              <div class="alert alert-dark" role="alert">
+                Bienvenido <%= username %>
+                <span style="float: right">
+                  <a href="/logout">Desloguear</a></span
+                >
+                <span style="float: right">
+                  <a href="/carrito"
+                    ><i class="fa-solid fa-cart-shopping fa-2x"></i>
+                    <%if (items>0) { %>
+                    <span class="cart-items"><%= items %></span>
+                    <% }; %>
+                  </a></span
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="container-fluid">
+          <div class="card">
+            <div class="card-header text-white bg-primary">Productos</div>
+            <div class="card-body">
+              <table class="table table-dark" id="tblProductos">
+                <thead>
+                  <th scope="col">Nombre</th>
+                  <th scope="col">Precio</th>
+                  <th scope="col">Foto</th>
+                  <th scope="col">Agregar</th>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+  <script>
+    $(document).ready(() => {
+      fetch("/api/productos")
+        .then((response) => response.json())
+        .then((data) => {
+          data.forEach((prod) => {
+            var newRowContent =
+              "<tr><td> " +
+              prod.nombre +
+              "</td>" +
+              "<td> " +
+              prod.precio +
+              "</td>" +
+              "<td><img src=" +
+              prod.foto +
+              ' style="width: 64px" </td>' +
+              '<td><a href="/carrito/add/' +
+              (prod.id || prod._id) +
+              '"><i class="fa-solid fa-plus"></i></a></td></tr>';
+
+            $("#tblProductos tbody").append(newRowContent);
+          });
+        })
+        .catch((ex) => console.error(ex));
+    });
+  </script>
+</html>

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es">
+  <%- include head %>
+  <body>
+    <div class="container-fluid">
+      <div class="card">
+        <div class="card-header text-white bg-primary">Productos</div>
+        <div class="card-body">
+          <%if (productos && productos.length > 0) { %>
+          <table class="table table-dark">
+            <thead>
+              <th scope="col">Nombre</th>
+              <th scope="col">Precio</th>
+              <th scope="col">Foto</th>
+              <th scope="col">Cantidad</th>
+            </thead>
+            <tbody>
+              <% productos.forEach(function(prod) { %>
+              <tr>
+                <td><%= prod.producto.nombre %></td>
+                <td><%= prod.producto.precio %></td>
+                <td>
+                  <%if (prod.producto.foto) { %>
+                  <img src="<%= prod.producto.foto %>" style="width: 64px" />
+                  <% } %>
+                </td>
+                <td><%= prod.cantidad %></td>
+              </tr>
+              <% }); %>
+            </tbody>
+          </table>
+          <% } else {%>
+          <div class="alert alert-warning" role="alert">
+            No se encontraron productos
+          </div>
+          <% } %>
+          <a href="/">volver</a>
+          <%if (productos && productos.length > 0) { %>
+          <form method="post" action="/carrito/terminar">
+            <div class="form-group row" style="display: inline-block">
+              <input
+                class="btn btn-success"
+                type="submit"
+                name="enviar"
+                value="Terminar"
+              />
+            </div>
+          </form>
+          <% } %>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

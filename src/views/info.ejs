@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es">
+  <% include head %>
+  <body>
+    <div class="container-fluid">
+      <div id="chats">
+        <div class="container-fluid">
+          <div class="card">
+            <div class="card-header text-white bg-primary">Login</div>
+            <div class="card-body">
+              <%if (error) { %>
+              <div class="alert alert-danger"><%= error %></div>
+              <% }; %>
+              <form class="form-horizontal" method="POST" action="/login">
+                <div class="form-group row">
+                  <input
+                    required
+                    placeholder="Ingrese su email"
+                    class="form-control col-6"
+                    type="text"
+                    name="username"
+                  />
+                </div>
+                <div class="form-group row">
+                  <input
+                    required
+                    placeholder="Ingrese su contraseña"
+                    class="form-control col-6"
+                    type="text"
+                    name="password"
+                  />
+                </div>
+                <div class="form-group row" style="display: inline-block">
+                  <input
+                    class="btn btn-success"
+                    type="submit"
+                    name="enviar"
+                    value="Ingresar"
+                  />
+                  <a class="btn btn-primary" href="/registro">Registrarse</a>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
